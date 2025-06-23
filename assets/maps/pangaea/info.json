@@ -1,7 +1,5 @@
 {
   "name": "Pangaea",
-  "width": 1000,
-  "height": 1000,
   "nations": [
     {
       "coordinates": [389, 800],

@@ -45,6 +45,12 @@ type MapResult struct {
 	Map []byte
 	MiniMap []byte
 	Thumbnail []byte
+	MapWidth int
+	MapHeight int
+	MapNumLandTiles int
+	MiniMapWidth int
+	MiniMapHeight int
+	MiniMapNumLandTiles int
 }
 
 type GeneratorArgs struct {
@@ -106,14 +112,20 @@ func GenerateMap(args GeneratorArgs) (MapResult, error) {
 		return MapResult{}, fmt.Errorf("failed to save thumbnail: %w", err)
 	}
 
-	mapData := packTerrain(terrain)
-	miniMapData := packTerrain(miniTerrain)
+	mapData, mapNumLandTiles := packTerrain(terrain)
+	miniMapData, miniMapNumLandTiles := packTerrain(miniTerrain)
 
 
 	return MapResult{
 		Map: mapData,
 		MiniMap: miniMapData,
 		Thumbnail: webp,
+		MapWidth: width,
+		MapHeight: height,
+		MapNumLandTiles: mapNumLandTiles,
+		MiniMapWidth: width / 2,
+		MiniMapHeight: height / 2,
+		MiniMapNumLandTiles: miniMapNumLandTiles,
 	}, nil
 }
 
@@ -423,16 +435,11 @@ func removeSmallIslands(terrain [][]Terrain, removeSmall bool) {
 		smallIslands, minIslandSize)
 }
 
-func packTerrain(terrain [][]Terrain) []byte {
+func packTerrain(terrain [][]Terrain) (data []byte, numLandTiles int) {
 	width := len(terrain)
 	height := len(terrain[0])
-	packedData := make([]byte, 4+width*height)
-	
-	// Add width and height to first 4 bytes
-	packedData[0] = byte(width & 0xff)
-	packedData[1] = byte((width >> 8) & 0xff)
-	packedData[2] = byte(height & 0xff)
-	packedData[3] = byte((height >> 8) & 0xff)
+	packedData := make([]byte, width*height)
+	numLandTiles = 0
 	
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
@@ -441,8 +448,10 @@ func packTerrain(terrain [][]Terrain) []byte {
 			
 			if tile.Type == Land {
 				packedByte |= 0b10000000
+				numLandTiles++
 			}
 			if tile.Shoreline {
+				numLandTiles++
 				packedByte |= 0b01000000
 			}
 			if tile.Ocean {
@@ -455,12 +464,12 @@ func packTerrain(terrain [][]Terrain) []byte {
 				packedByte |= byte(math.Min(math.Ceil(tile.Magnitude/2), 31))
 			}
 			
-			packedData[4+y*width+x] = packedByte
+			packedData[y*width+x] = packedByte
 		}
 	}
 	
 	logBinaryAsBits(packedData, 8)
-	return packedData
+	return packedData, numLandTiles
 }
 
 func createMapThumbnail(terrain [][]Terrain, quality float64) *image.RGBA {

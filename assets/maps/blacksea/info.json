@@ -1,7 +1,5 @@
 {
   "name": "BlackSea",
-  "width": 1500,
-  "height": 1100,
   "nations": [
     {
       "coordinates": [122, 647],

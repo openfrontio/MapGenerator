@@ -1,7 +1,5 @@
 {
   "name": "Giant_World_Map",
-  "width": 4110,
-  "height": 1948,
   "nations": [
     {
       "coordinates": [777, 540],

@@ -1,7 +1,5 @@
 {
   "name": "Mars",
-  "width": 2000,
-  "height": 1000,
   "nations": [
     {
       "coordinates": [650, 415],

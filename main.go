@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -62,10 +63,16 @@ func processMap(name string, isTest bool) error {
 	}
 
 	// Read the info.json file
-	infoPath := filepath.Join(cwd, "assets", mapDir, name, "info.json")
-	infoBuffer, err := os.ReadFile(infoPath)
+	manifestPath := filepath.Join(cwd, "assets", mapDir, name, "info.json")
+	manifestBuffer, err := os.ReadFile(manifestPath)
 	if err != nil {
-		return fmt.Errorf("failed to read info file %s: %w", infoPath, err)
+		return fmt.Errorf("failed to read info file %s: %w", manifestPath, err)
+	}
+
+	// Parse the info buffer as dynamic JSON
+	var manifest map[string]interface{}
+	if err := json.Unmarshal(manifestBuffer, &manifest); err != nil {
+		return fmt.Errorf("failed to parse info.json for %s: %w", name, err)
 	}
 
 	// Generate maps
@@ -76,6 +83,17 @@ func processMap(name string, isTest bool) error {
 	})
 	if err != nil {
 		return fmt.Errorf("failed to generate map for %s: %w", name, err)
+	}
+
+	manifest["map"] = map[string]interface{}{
+		"width": result.MapWidth,
+		"height": result.MapHeight,
+		"num_land_tiles": result.MapNumLandTiles,
+	}	
+	manifest["mini_map"] = map[string]interface{}{
+		"width": result.MiniMapWidth,
+		"height": result.MiniMapHeight,
+		"num_land_tiles": result.MiniMapNumLandTiles,
 	}
 	
 	outputPath := filepath.Join(cwd, "generated", mapDir, name)
@@ -92,7 +110,14 @@ func processMap(name string, isTest bool) error {
 	if err := os.WriteFile(filepath.Join(outputPath, "thumbnail.webp"), result.Thumbnail, 0644); err != nil {
 		return fmt.Errorf("failed to write thumbnail for %s: %w", name, err)
 	}
-	if err := os.WriteFile(filepath.Join(outputPath, "manifest.json"), infoBuffer, 0644); err != nil {
+	
+	// Serialize the updated manifest to JSON
+	updatedManifest, err := json.MarshalIndent(manifest, "", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to serialize manifest for %s: %w", name, err)
+	}
+	
+	if err := os.WriteFile(filepath.Join(outputPath, "manifest.json"), updatedManifest, 0644); err != nil {
 		return fmt.Errorf("failed to write manifest for %s: %w", name, err)
 	}
 	return nil

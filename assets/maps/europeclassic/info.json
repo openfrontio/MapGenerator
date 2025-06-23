@@ -1,7 +1,5 @@
 {
   "name": "Europe",
-  "width": 2000,
-  "height": 1000,
   "nations": [
     {
       "coordinates": [171, 171],
