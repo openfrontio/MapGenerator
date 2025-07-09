@@ -68,6 +68,10 @@ func GenerateMap(args GeneratorArgs) (MapResult, error) {
 	bounds := img.Bounds()
 	width, height := bounds.Dx(), bounds.Dy()
 
+	// Ensure width and height are even for the mini map downscaling
+	width = width - (width % 2)
+	height = height - (height % 2)
+
 	log.Printf("Processing Map: %s, dimensions: %dx%d", args.Name, width, height)
 
 	// Initialize terrain grid
