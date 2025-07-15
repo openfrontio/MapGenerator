@@ -455,7 +455,6 @@ func packTerrain(terrain [][]Terrain) (data []byte, numLandTiles int) {
 				numLandTiles++
 			}
 			if tile.Shoreline {
-				numLandTiles++
 				packedByte |= 0b01000000
 			}
 			if tile.Ocean {
