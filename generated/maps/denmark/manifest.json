@@ -1,0 +1,42 @@
+{
+  "map": {
+    "height": 2022,
+    "num_land_tiles": 1381230,
+    "width": 1800
+  },
+  "mini_map": {
+    "height": 1011,
+    "num_land_tiles": 340446,
+    "width": 900
+  },
+  "name": "Denmark",
+  "nations": [
+    {
+      "coordinates": [
+        435,
+        1000
+      ],
+      "flag": "dk",
+      "name": "Jutland",
+      "strength": 2
+    },
+    {
+      "coordinates": [
+        820,
+        1500
+      ],
+      "flag": "dk",
+      "name": "Fyn",
+      "strength": 1
+    },
+    {
+      "coordinates": [
+        1410,
+        1390
+      ],
+      "flag": "dk",
+      "name": "Zealand",
+      "strength": 2
+    }
+  ]
+}

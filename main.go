@@ -18,6 +18,7 @@ var maps = []struct {
 	{Name: "world"},
 	{Name: "giantworldmap"},
 	{Name: "blacksea"},
+	{Name: "denmark"},
 	{Name: "europe"},
 	{Name: "europeclassic"},
 	{Name: "mars"},
