@@ -1,0 +1,23 @@
+{
+  "name": "Denmark",
+  "nations": [
+    {
+      "coordinates": [435, 1000],
+      "name": "Jutland",
+      "strength": 2,
+      "flag": "dk"
+    },
+    {
+      "coordinates": [820, 1500],
+      "name": "Fyn",
+      "strength": 2,
+      "flag": "dk"
+    },
+    {
+      "coordinates": [1410, 1390],
+      "name": "Zealand",
+      "strength": 2,
+      "flag": "dk"
+    }
+  ]
+}
